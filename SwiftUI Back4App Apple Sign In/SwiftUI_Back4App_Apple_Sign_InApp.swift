@@ -6,12 +6,29 @@
 //
 
 import SwiftUI
+import ParseSwift
 
 @main
 struct SwiftUI_Back4App_Apple_Sign_InApp: App {
+    @StateObject private var authViewModel = AuthViewModel()
+    
+    init() {
+        ParseSwift.initialize(applicationId: "your_applicationId",
+                              clientKey: "your_clientKey",
+                              serverURL: URL(string: "https://parseapi.back4app.com/")!)
+    }
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if authViewModel.isLoggedIn {
+                MainTabView()
+                    .environmentObject(authViewModel)
+            } else {
+                LoginView()
+                    .environmentObject(authViewModel)
+            }
         }
     }
 }
+
+
